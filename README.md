@@ -644,3 +644,108 @@ public class StrategyPatternExample {
 - **Increased Number of Classes**: Depending on the number of strategies, it can lead to a proliferation of classes.
 
 The Strategy Design Pattern is widely used in scenarios such as sorting algorithms, payment methods, and various configuration options, where the algorithm or behavior needs to be selected dynamically at runtime.
+
+
+### Template Design Pattern
+The Template Design Pattern is a behavioral design pattern that defines the skeleton of an algorithm in a method, deferring some steps to subclasses. This allows subclasses to redefine certain steps of the algorithm without changing its structure. It promotes code reuse and encapsulates invariant parts of an algorithm while allowing flexibility in the variable parts.
+
+### Key Concepts
+
+1. **Template Method**: This is a method defined in the abstract class that outlines the structure of the algorithm. It calls abstract or hook methods that can be implemented by subclasses.
+
+2. **Abstract Class**: This class contains the template method and may have abstract methods for the variable parts of the algorithm that subclasses must implement.
+
+3. **Concrete Classes**: These classes extend the abstract class and implement the specific behavior of the algorithm.
+
+### When to Use
+
+- When you have multiple classes that share common behavior but have specific variations.
+- When you want to encapsulate the invariant parts of an algorithm while allowing subclasses to implement the variable parts.
+- When you want to avoid code duplication among similar classes.
+
+### Example in Java
+
+Here’s a simple example to illustrate the Template Design Pattern:
+
+```java
+// Abstract Class
+abstract class Meal {
+    // Template method
+    public final void prepareMeal() {
+        gatherIngredients();
+        cook();
+        serve();
+    }
+
+    // Steps of the algorithm
+    protected abstract void gatherIngredients();
+    protected abstract void cook();
+
+    // Concrete method
+    private void serve() {
+        System.out.println("Serving the meal.");
+    }
+}
+
+// Concrete Class: Pasta
+class PastaMeal extends Meal {
+    @Override
+    protected void gatherIngredients() {
+        System.out.println("Gathering ingredients for Pasta: pasta, sauce, cheese.");
+    }
+
+    @Override
+    protected void cook() {
+        System.out.println("Cooking Pasta.");
+    }
+}
+
+// Concrete Class: Salad
+class SaladMeal extends Meal {
+    @Override
+    protected void gatherIngredients() {
+        System.out.println("Gathering ingredients for Salad: lettuce, tomatoes, dressing.");
+    }
+
+    @Override
+    protected void cook() {
+        System.out.println("Tossing Salad.");
+    }
+}
+
+// Client Code
+public class TemplatePatternExample {
+    public static void main(String[] args) {
+        Meal pastaMeal = new PastaMeal();
+        pastaMeal.prepareMeal();
+
+        System.out.println();
+
+        Meal saladMeal = new SaladMeal();
+        saladMeal.prepareMeal();
+    }
+}
+```
+
+### Explanation of the Example
+
+1. **Abstract Class**: The `Meal` class defines the `prepareMeal()` template method, which outlines the steps for preparing a meal. It calls abstract methods `gatherIngredients()` and `cook()` that subclasses must implement. The `serve()` method is concrete and cannot be changed.
+
+2. **Concrete Classes**:
+   - `PastaMeal` implements the abstract methods to gather ingredients and cook pasta.
+   - `SaladMeal` implements the abstract methods to gather ingredients and toss a salad.
+
+3. **Client Code**: In the `main` method, instances of `PastaMeal` and `SaladMeal` are created, and the `prepareMeal()` method is called. Each subclass executes its specific steps while following the template defined in the abstract class.
+
+### Benefits
+
+- **Code Reuse**: Common behavior is defined in the abstract class, reducing code duplication.
+- **Flexibility**: Subclasses can implement their specific behavior while adhering to a common structure.
+- **Control Over Steps**: The template method controls the order of operations and ensures that certain steps are always performed.
+
+### Drawbacks
+
+- **Increased Complexity**: Overusing the template pattern can lead to an increase in the number of classes, making the code harder to navigate.
+- **Rigid Structure**: The template method defines a strict sequence of operations, which may not be suitable for all subclasses.
+
+The Template Design Pattern is commonly used in frameworks and libraries, where it provides a way to define base behavior while allowing customization in subclasses. It is particularly useful in scenarios such as data processing, game development, and user interface rendering, where a consistent process needs to accommodate varying details.

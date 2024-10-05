@@ -288,3 +288,129 @@ public class DecoratorPatternExample {
 - **Open/Closed Principle**: The pattern allows you to extend behavior without modifying existing code, making it easy to maintain and enhance.
 
 The Decorator Design Pattern is widely used in various frameworks and libraries, particularly in situations where objects need to be enhanced with additional functionalities in a dynamic and flexible way.
+
+### Observer Design Pattern
+
+The Observer Design Pattern is a behavioral design pattern that defines a one-to-many dependency between objects, allowing multiple observers to be notified and updated automatically when the state of the subject (the object being observed) changes. This pattern is particularly useful for implementing event handling systems and broadcasting changes to multiple components.
+
+### Key Concepts
+
+1. **Subject (Observable)**: This is the object that maintains a list of observers and notifies them of any changes in its state.
+
+2. **Observer**: This is the interface or abstract class that defines the method(s) that observers must implement to receive updates from the subject.
+
+3. **Concrete Subject**: This class implements the Subject interface and maintains the state that observers are interested in. It provides methods to attach and detach observers.
+
+4. **Concrete Observer**: This class implements the Observer interface and defines the actions that need to be taken when notified of a change in the subject.
+
+### When to Use
+
+- When a change to one object requires changing others, and you don't know how many objects need to be changed in advance.
+- When an object (the subject) should be able to notify other objects (the observers) without tightly coupling them.
+- When you want to implement a distributed event handling system.
+
+### Example in Java
+
+Here’s a simple example to illustrate the Observer Design Pattern:
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Observer Interface
+interface Observer {
+    void update(String message);
+}
+
+// Concrete Observer
+class EmailSubscriber implements Observer {
+    private String email;
+
+    public EmailSubscriber(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("Email to " + email + ": " + message);
+    }
+}
+
+// Concrete Observer
+class SMSSubscriber implements Observer {
+    private String phoneNumber;
+
+    public SMSSubscriber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("SMS to " + phoneNumber + ": " + message);
+    }
+}
+
+// Subject Interface
+interface Subject {
+    void attach(Observer observer);
+    void detach(Observer observer);
+    void notifyObservers(String message);
+}
+
+// Concrete Subject
+class Newsletter implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+}
+
+// Client Code
+public class ObserverPatternExample {
+    public static void main(String[] args) {
+        Newsletter newsletter = new Newsletter();
+
+        Observer emailSubscriber = new EmailSubscriber("john@example.com");
+        Observer smsSubscriber = new SMSSubscriber("123-456-7890");
+
+        newsletter.attach(emailSubscriber);
+        newsletter.attach(smsSubscriber);
+
+        newsletter.notifyObservers("New article published!");
+    }
+}
+```
+
+### Explanation of the Example
+
+1. **Observer Interface**: The `Observer` interface defines the `update()` method that all concrete observers must implement to receive updates.
+
+2. **Concrete Observers**: `EmailSubscriber` and `SMSSubscriber` implement the `Observer` interface, defining how each observer reacts to updates. They print a message to the console, simulating sending an email or SMS.
+
+3. **Subject Interface**: The `Subject` interface defines methods to attach, detach, and notify observers.
+
+4. **Concrete Subject**: The `Newsletter` class implements the `Subject` interface. It maintains a list of observers and notifies them when there’s a change.
+
+5. **Client Code**: In the `main` method, a `Newsletter` object is created, and both `EmailSubscriber` and `SMSSubscriber` are attached as observers. When `notifyObservers()` is called, all observers receive the update.
+
+### Benefits
+
+- **Loose Coupling**: Observers and subjects are loosely coupled; changes in one do not affect the other directly.
+- **Dynamic Relationships**: Observers can be added or removed at runtime, providing flexibility.
+- **Support for Broadcast Communication**: Multiple observers can be notified simultaneously, which is useful for event-driven systems.
+
+The Observer Design Pattern is widely used in various applications, such as user interface frameworks, event handling systems, and real-time data processing, where changes in one part of the system need to trigger updates in other parts.

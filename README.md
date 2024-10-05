@@ -155,3 +155,136 @@ public class BuilderPatternExample {
 - **Separation of Concerns**: The construction logic is separated from the representation, making the code easier to maintain.
 
 The Builder Design Pattern is particularly useful in situations where the object being created has many attributes or when the creation process involves multiple steps. It enhances code clarity and maintainability while providing a clear structure for object creation.
+
+
+### Decorator Design Pattern
+
+The Decorator Design Pattern is a structural design pattern that allows behavior to be added to individual objects, either statically or dynamically, without affecting the behavior of other objects from the same class. It is a flexible alternative to subclassing for extending functionality.
+
+### Key Concepts
+
+1. **Component**: This is the interface or abstract class that defines the operations that can be dynamically added to concrete components.
+
+2. **Concrete Component**: This is the original object that can be decorated. It implements the Component interface.
+
+3. **Decorator**: This is an abstract class that implements the Component interface and has a reference to a Component object. It delegates the operations to the wrapped component.
+
+4. **Concrete Decorators**: These are classes that extend the Decorator class and add additional behavior or state to the component.
+
+### When to Use
+
+- When you want to add responsibilities to individual objects dynamically and transparently.
+- When extension by subclassing is impractical due to the large number of possible combinations of behaviors.
+- When you want to be able to mix and match behaviors.
+
+### Example in Java
+
+Here’s a simple example to illustrate the Decorator Design Pattern:
+
+```java
+// Component Interface
+interface Coffee {
+    String getDescription();
+    double cost();
+}
+
+// Concrete Component
+class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Simple Coffee";
+    }
+
+    @Override
+    public double cost() {
+        return 2.00;
+    }
+}
+
+// Decorator
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee coffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.coffee = coffee;
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription();
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost();
+    }
+}
+
+// Concrete Decorator
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", Milk";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 0.50;
+    }
+}
+
+// Another Concrete Decorator
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", Sugar";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 0.20;
+    }
+}
+
+// Client Code
+public class DecoratorPatternExample {
+    public static void main(String[] args) {
+        Coffee coffee = new SimpleCoffee();
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+
+        coffee = new MilkDecorator(coffee);
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+
+        coffee = new SugarDecorator(coffee);
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+    }
+}
+```
+
+### Explanation of the Example
+
+1. **Component Interface**: `Coffee` defines the methods `getDescription()` and `cost()`, which all concrete components and decorators will implement.
+
+2. **Concrete Component**: `SimpleCoffee` is a basic implementation of the `Coffee` interface.
+
+3. **Decorator**: `CoffeeDecorator` implements the `Coffee` interface and holds a reference to a `Coffee` object. It delegates method calls to this object.
+
+4. **Concrete Decorators**: `MilkDecorator` and `SugarDecorator` extend the `CoffeeDecorator` class, adding their specific functionality. They modify the description and cost of the coffee.
+
+5. **Client Code**: In the `main` method, a `SimpleCoffee` object is created. It is then wrapped with `MilkDecorator` and `SugarDecorator` in succession, demonstrating how additional behaviors can be added dynamically.
+
+### Benefits
+
+- **Flexible and Extensible**: You can mix and match decorators to create a wide range of behaviors.
+- **Single Responsibility**: Each decorator has a single responsibility, adhering to the Single Responsibility Principle (SRP).
+- **Open/Closed Principle**: The pattern allows you to extend behavior without modifying existing code, making it easy to maintain and enhance.
+
+The Decorator Design Pattern is widely used in various frameworks and libraries, particularly in situations where objects need to be enhanced with additional functionalities in a dynamic and flexible way.

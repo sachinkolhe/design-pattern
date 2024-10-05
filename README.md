@@ -529,3 +529,118 @@ public static Singleton getInstance() {
 - **Difficulty in Subclassing**: Because of the private constructor, it is not possible to extend the Singleton class.
 
 The Singleton Design Pattern is commonly used in scenarios such as configuration management, logging, caching, and database connections, where a single shared instance is essential for proper functionality.
+
+
+### Strategy Design Pattern
+
+The Strategy Design Pattern is a behavioral design pattern that enables selecting an algorithm's behavior at runtime. It defines a family of algorithms, encapsulates each one, and makes them interchangeable. This pattern allows the algorithm to vary independently from the clients that use it.
+
+### Key Concepts
+
+1. **Strategy Interface**: This is the common interface for all concrete strategies. It defines the method(s) that each strategy must implement.
+
+2. **Concrete Strategies**: These are classes that implement the Strategy interface, each providing a different algorithm or behavior.
+
+3. **Context**: This is the class that uses a Strategy. It holds a reference to a Strategy object and delegates the algorithm's execution to the current strategy.
+
+### When to Use
+
+- When you have multiple algorithms for a specific task, and you want to choose one at runtime.
+- When you want to avoid using conditional statements to select behaviors.
+- When you want to encapsulate behaviors in separate classes for easier maintenance and testing.
+
+### Example in Java
+
+Here’s a simple example to illustrate the Strategy Design Pattern:
+
+```java
+// Strategy Interface
+interface PaymentStrategy {
+    void pay(int amount);
+}
+
+// Concrete Strategy: Credit Card Payment
+class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+
+    public CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    @Override
+    public void pay(int amount) {
+        System.out.println("Paid " + amount + " using Credit Card: " + cardNumber);
+    }
+}
+
+// Concrete Strategy: PayPal Payment
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+
+    public PayPalPayment(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void pay(int amount) {
+        System.out.println("Paid " + amount + " using PayPal: " + email);
+    }
+}
+
+// Context
+class ShoppingCart {
+    private PaymentStrategy paymentStrategy;
+
+    public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public void checkout(int amount) {
+        if (paymentStrategy == null) {
+            System.out.println("Payment method not set!");
+            return;
+        }
+        paymentStrategy.pay(amount);
+    }
+}
+
+// Client Code
+public class StrategyPatternExample {
+    public static void main(String[] args) {
+        ShoppingCart cart = new ShoppingCart();
+
+        // Pay with Credit Card
+        cart.setPaymentStrategy(new CreditCardPayment("1234-5678-9876-5432"));
+        cart.checkout(100);
+
+        // Pay with PayPal
+        cart.setPaymentStrategy(new PayPalPayment("user@example.com"));
+        cart.checkout(200);
+    }
+}
+```
+
+### Explanation of the Example
+
+1. **Strategy Interface**: The `PaymentStrategy` interface defines a method `pay(int amount)` that all concrete strategies must implement.
+
+2. **Concrete Strategies**: 
+   - `CreditCardPayment` implements the `PaymentStrategy` interface, providing an implementation for paying with a credit card.
+   - `PayPalPayment` implements the `PaymentStrategy` interface, providing an implementation for paying with PayPal.
+
+3. **Context**: The `ShoppingCart` class uses a `PaymentStrategy` to process payments. It has a method `setPaymentStrategy()` to change the payment method and a `checkout()` method to execute the payment.
+
+4. **Client Code**: In the `main` method, a `ShoppingCart` object is created. The payment strategy is set to `CreditCardPayment` and then to `PayPalPayment`, demonstrating how the payment method can be changed dynamically.
+
+### Benefits
+
+- **Flexibility**: You can easily switch between different algorithms at runtime.
+- **Single Responsibility Principle**: Each strategy encapsulates a specific behavior, adhering to the principle of separating concerns.
+- **Open/Closed Principle**: New strategies can be added without modifying the context or existing strategies.
+
+### Drawbacks
+
+- **Complexity**: Introducing many strategies can lead to a more complex system. Each new algorithm requires a new class.
+- **Increased Number of Classes**: Depending on the number of strategies, it can lead to a proliferation of classes.
+
+The Strategy Design Pattern is widely used in scenarios such as sorting algorithms, payment methods, and various configuration options, where the algorithm or behavior needs to be selected dynamically at runtime.

@@ -414,3 +414,118 @@ public class ObserverPatternExample {
 - **Support for Broadcast Communication**: Multiple observers can be notified simultaneously, which is useful for event-driven systems.
 
 The Observer Design Pattern is widely used in various applications, such as user interface frameworks, event handling systems, and real-time data processing, where changes in one part of the system need to trigger updates in other parts.
+
+
+### Singleton Design Pattern 
+
+The Singleton Design Pattern is a creational design pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is often used to manage shared resources, configurations, or services throughout an application.
+
+### Key Concepts
+
+1. **Single Instance**: The Singleton pattern restricts instantiation of a class to a single object. This is useful when exactly one object is needed to coordinate actions across the system.
+
+2. **Global Access**: It provides a way to access the single instance globally. This can be done through a static method.
+
+### When to Use
+
+- When you need exactly one instance of a class to control access to a shared resource.
+- When the instantiation of the class is resource-intensive, and you want to avoid multiple creations.
+- When you need a centralized management of configurations or services.
+
+### Implementation Steps
+
+1. **Private Constructor**: The constructor of the class is made private to prevent instantiation from outside the class.
+
+2. **Static Variable**: A static variable holds the single instance of the class.
+
+3. **Static Method**: A public static method provides access to the instance, creating it if it does not already exist.
+
+### Example in Java
+
+Here's a simple example to illustrate the Singleton Design Pattern:
+
+```java
+// Singleton Class
+class Singleton {
+    // Static variable to hold the single instance
+    private static Singleton instance;
+
+    // Private constructor to prevent instantiation
+    private Singleton() {
+        // Initialization code here
+    }
+
+    // Public method to provide access to the instance
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+
+    // Example method
+    public void showMessage() {
+        System.out.println("Hello from Singleton!");
+    }
+}
+
+// Client Code
+public class SingletonPatternExample {
+    public static void main(String[] args) {
+        // Get the only instance of Singleton
+        Singleton singleton = Singleton.getInstance();
+        singleton.showMessage();
+    }
+}
+```
+
+### Explanation of the Example
+
+1. **Singleton Class**: The `Singleton` class has a private static variable `instance` that holds the single instance of the class. The constructor is private, so it cannot be instantiated from outside the class.
+
+2. **getInstance Method**: The `getInstance()` method checks if the `instance` is `null`. If it is, it creates a new instance. This ensures that only one instance of the class is created.
+
+3. **Client Code**: In the `main` method, `getInstance()` is called to retrieve the single instance of `Singleton`, and then a method (`showMessage()`) is called on that instance.
+
+### Thread Safety
+
+In a multi-threaded environment, the basic implementation can lead to multiple instances being created. To make it thread-safe, you can use synchronization or other mechanisms, such as:
+
+#### Synchronized Method
+
+```java
+public static synchronized Singleton getInstance() {
+    if (instance == null) {
+        instance = new Singleton();
+    }
+    return instance;
+}
+```
+
+#### Double-Checked Locking
+
+```java
+public static Singleton getInstance() {
+    if (instance == null) {
+        synchronized (Singleton.class) {
+            if (instance == null) {
+                instance = new Singleton();
+            }
+        }
+    }
+    return instance;
+}
+```
+
+### Benefits
+
+- **Controlled Access**: The Singleton pattern controls access to the instance, ensuring that the same instance is used throughout the application.
+- **Reduced Memory Footprint**: It prevents the creation of multiple instances, saving memory.
+- **Ease of Use**: Provides a simple interface for accessing the instance.
+
+### Drawbacks
+
+- **Global State**: Singletons can introduce global state into an application, which can make testing and debugging more difficult.
+- **Difficulty in Subclassing**: Because of the private constructor, it is not possible to extend the Singleton class.
+
+The Singleton Design Pattern is commonly used in scenarios such as configuration management, logging, caching, and database connections, where a single shared instance is essential for proper functionality.
